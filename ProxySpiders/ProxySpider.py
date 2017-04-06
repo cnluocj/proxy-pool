@@ -12,7 +12,7 @@ class KuaidailiProxySpider(BaseProxySpider):
 
     start_urls = map(lambda x: 'http://www.kuaidaili.com/proxylist/%s/' % str(x), [x for x in range(1, 11)])
 
-    def getProxys(self):
+    def getProxies(self):
         for url in self.start_urls:
             driver = webdriver.PhantomJS()
             driver.get(url)
@@ -27,12 +27,13 @@ class KuaidailiProxySpider(BaseProxySpider):
                 proxy.faceless = sel.xpath("td[@data-title='%s']/text()" % u'匿名度')[0]
                 proxy.type = sel.xpath("td[@data-title='%s']/text()" % u'类型')[0]
                 proxy.address = sel.xpath("td[@data-title='%s']/text()" % u'位置')[0]
-                yield json.dumps(proxy.toDict())
+                yield json.dumps(proxy.to_dict())
             driver.close()
+
 
 if __name__ == '__main__':
     spider = KuaidailiProxySpider()
-    proxies = spider.getProxys()
+    proxies = spider.getProxies()
     for proxy in proxies:
         print proxy
 
