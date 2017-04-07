@@ -1,13 +1,14 @@
 # coding:utf-8
 
+import json
+
 
 class Proxy(object):
-    def __init__(self, ip='', port='', faceless='', type='', address=''):
+    def __init__(self, ip='', port='', faceless='', type=''):
         self.ip = ip
         self.port = port
         self.faceless = faceless
         self.type = type
-        self.address = address
 
     def __setattr__(self, key, value):
         if 'faceless' == key:
@@ -39,17 +40,16 @@ class Proxy(object):
             'port': self.port,
             'faceless': self.faceless,
             'type': self.type,
-            'address': self.address,
         }
 
+    @classmethod
+    def to_object(cls, object_dict):
+        if type(object_dict) != dict:
+            object_dict = json.loads(object_dict)
 
-class BaseProxySpider(object):
-
-    def getProxies(self):
-        """
-        返回代理的 json 结构
-        :return:
-        """
-        raise NotImplementedError('subclasses of BaseCache must provide a getProxy() method')
-
-
+        proxy = cls()
+        proxy.ip = object_dict['ip']
+        proxy.port = object_dict['port']
+        proxy.faceless = object_dict['faceless']
+        proxy.type = object_dict['type']
+        return proxy
