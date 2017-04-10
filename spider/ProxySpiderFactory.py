@@ -1,11 +1,14 @@
 # coding:utf-8
 
-from spider.ProxySpider import KuaidailiProxySpider
+from spider.ProxySpider import *
 
 
 class ProxySpiderFactory(object):
 
-    proxy_clss = [KuaidailiProxySpider]
+    proxy_clss = [
+        KuaidailiProxySpider,
+        XicidailiProxySpider,
+    ]
 
     @classmethod
     def create_spider(cls, spider_class):

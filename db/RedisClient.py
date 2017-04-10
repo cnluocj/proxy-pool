@@ -34,12 +34,13 @@ class RedisClient(object):
 
 
 if __name__ == '__main__':
-    client = RedisClient(name='testpy', host='localhost', port=6379)
+    client = RedisClient(name='wait_validate_proxies', host='localhost', port=6379)
     for cls in ProxySpiderFactory.proxy_clss:
         spider = ProxySpiderFactory.create_spider(cls)
         proxies = spider.load_proxies()
         for proxy in proxies:
             client.put(proxy)
+            proxy = Proxy.to_object(proxy)
             print 'ip: {}, port: {}, type: {}'.format(proxy.ip, proxy.port, proxy.type)
 
 
