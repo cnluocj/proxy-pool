@@ -4,6 +4,7 @@
 import redis
 import json
 from spider.items import Proxy
+from spider.ProxySpiderFactory import ProxySpiderFactory
 
 
 class RedisClient(object):
@@ -22,20 +23,23 @@ class RedisClient(object):
     def pop(self):
         return self.__connect.spop(self.name)
 
-    def getAll(self):
+    def get_all(self):
         return self.__connect.smembers(self.name)
 
-    def getCount(self):
+    def get_count(self):
         return self.__connect.scard(self.name)
 
-    def changeTable(self, name):
+    def change_table(self, name):
         self.name = name
 
 
 if __name__ == '__main__':
-    proxy = Proxy('127.0.0.1', '8080', u'透明', 'HTTPS')
-    client = RedisClient('testpy', 'localhost', 6379)
-    client.put(proxy)
-    proxy = Proxy.to_object(client.get())
-    print 'ip: {}, port: {}'.format(proxy.ip, proxy.port)
+    client = RedisClient(name='testpy', host='localhost', port=6379)
+    for cls in ProxySpiderFactory.proxy_clss:
+        spider = ProxySpiderFactory.create_spider(cls)
+        proxies = spider.load_proxies()
+        for proxy in proxies:
+            client.put(proxy)
+            print 'ip: {}, port: {}, type: {}'.format(proxy.ip, proxy.port, proxy.type)
+
 

@@ -4,7 +4,6 @@ import time
 import json
 from spider.BaseProxySpider import *
 from spider.items import Proxy
-from spider.ProxySpiderFactory import ProxySpiderFactory as psFactory
 from selenium import webdriver
 from lxml import etree
 
@@ -32,9 +31,7 @@ class KuaidailiProxySpider(BaseProxySpider):
 
 
 if __name__ == '__main__':
-    # spider = KuaidailiProxySpider()
-    # proxies = spider.loadProxies()
-    spider = psFactory.create_spider(KuaidailiProxySpider)
+    spider = KuaidailiProxySpider()
     proxies = spider.load_proxies()
     for proxy in proxies:
         print proxy

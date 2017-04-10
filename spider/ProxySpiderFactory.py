@@ -1,10 +1,11 @@
 # coding:utf-8
 
-from db.RedisClient import RedisClient
-from ProxySpider import KuaidailiProxySpider
+from spider.ProxySpider import KuaidailiProxySpider
 
 
 class ProxySpiderFactory(object):
+
+    proxy_clss = [KuaidailiProxySpider]
 
     @classmethod
     def create_spider(cls, spider_class):
@@ -17,7 +18,8 @@ class ProxySpiderFactory(object):
 
 
 if __name__ == '__main__':
-    spider = ProxySpiderFactory.create_spider(KuaidailiProxySpider)
-    proxies = spider.loadProxies()
-    for proxy in proxies:
-        print proxy
+    pass
+    # spider = ProxySpiderFactory.create_spider(KuaidailiProxySpider)
+    # proxies = spider.loadProxies()
+    # for proxy in proxies:
+    #     print proxy

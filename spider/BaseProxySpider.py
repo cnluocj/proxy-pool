@@ -3,7 +3,7 @@
 
 class BaseProxySpider(object):
 
-    def getProxies(self):
+    def load_proxies(self):
         """
         返回代理的 json 结构
         :return:
