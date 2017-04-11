@@ -9,19 +9,26 @@ from spider.ProxySpiderFactory import ProxySpiderFactory
 
 class RedisClient(object):
 
-    def __init__(self, name, host, port):
+    def __init__(self, name, host='localhost', port=6379):
         self.name = name
-        self.__connect = redis.Redis(host=host, port=port, db=0)
+        pool = redis.ConnectionPool(host=host, port=port, db=0)
+        self.__connect = redis.StrictRedis(connection_pool=pool)
 
     def get(self):
         return self.__connect.srandmember(name=self.name)
 
     def put(self, value):
         value = json.dumps(value.to_dict()) if type(value) == Proxy else value
-        return self.__connect.sadd(self.name, value)
+        return self.__connect.rpush(self.name, value)
 
     def pop(self):
-        return self.__connect.spop(self.name)
+        return self.__connect.lpop(self.name)
+
+    def blpop(self):
+        return self.__connect.blpop(self.name)
+
+    def delete(self, value):
+        self.__connect.srem(self.name, value)
 
     def get_all(self):
         return self.__connect.smembers(self.name)
