@@ -14,8 +14,8 @@ class RedisClient(object):
         pool = redis.ConnectionPool(host=host, port=port, db=0)
         self.__connect = redis.StrictRedis(connection_pool=pool)
 
-    def get(self):
-        return self.__connect.srandmember(name=self.name)
+    # def get(self):
+    #     return self.__connect.srandmember(name=self.name)
 
     def put(self, value):
         value = json.dumps(value.to_dict()) if type(value) == Proxy else value
@@ -34,7 +34,7 @@ class RedisClient(object):
         return self.__connect.smembers(self.name)
 
     def get_count(self):
-        return self.__connect.scard(self.name)
+        return self.__connect.llen(self.name)
 
     def change_table(self, name):
         self.name = name
