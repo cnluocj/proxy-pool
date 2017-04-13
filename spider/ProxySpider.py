@@ -59,9 +59,46 @@ class XicidailiProxySpider(BaseProxySpider):
                 yield json.dumps(proxy.to_dict())
 
 
+class GoubanjiaProxySpider(BaseProxySpider):
+    """
+    www.goubanjia.com
+
+
+<p style="display: none;">1</p><span>1</span><span style="display: inline-block;">7</span>
+<div style="display: inline-block;"></div>
+<div style="display: inline-block;"></div><span style="display: inline-block;">5.</span>
+<div style="display: inline-block;">3</div><span style="display: inline-block;">0</span><span style="display: inline-block;">.</span>
+<div style="display: inline-block;">12</div>
+<p style="display: none;">4.</p><span>4.</span>
+<p style="display: none;">12</p><span>12</span>
+<p style="display: none;"></p><span></span><span style="display: inline-block;">8</span>:<span class="port GEA">8615</span>
+
+    长这样...
+    """
+
+    # 国内匿名代理到270页之后就没验证时间了,国内透明代理一共就15页
+    start_urls = ['http://www.goubanjia.com/free/gngn/index{}.shtml'.format(x) for x in range(1, 270)] + \
+                 ['http://www.goubanjia.com/free/gnpt/index{}.shtml'.format(x) for x in range(1, 15)]
+
+    def load_proxies(self):
+        for url in self.start_urls:
+            content = requests.get(url, headers=self.headers).content
+            tree = etree.HTML(content)
+            for sel in tree.xpath('//tr/td[@class="ip"]'):
+                proxy = Proxy()
+                proxy.port = sel.xpath('span[contains(@class, "port")]/text()')[0]
+                ip_slices = sel.xpath('*[contains(@style, "display: inline-block;") or contains(@style, "") and not(contains(@class, "port"))]/text()')
+                ip = ''
+                for sli in ip_slices:
+                    ip += sli
+                proxy.ip = ip
+                yield json.dumps(proxy.to_dict())
+
+
 if __name__ == '__main__':
     # spider = KuaidailiProxySpider()
-    spider = XicidailiProxySpider()
+    # spider = XicidailiProxySpider()
+    spider = GoubanjiaProxySpider()
     proxies = spider.load_proxies()
     for proxy in proxies:
         print proxy
