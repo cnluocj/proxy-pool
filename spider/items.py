@@ -23,6 +23,8 @@ class Proxy(object):
             self.__dict__['faceless'] = u'透明'
         elif u'高匿' in value:
             self.__dict__['faceless'] = u'高匿'
+        elif u'匿名' in value:
+            self.__dict__['faceless'] = u'匿名'
         else:
             self.__dict__['faceless'] = value
 

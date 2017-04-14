@@ -63,15 +63,25 @@ class GoubanjiaProxySpider(BaseProxySpider):
     """
     www.goubanjia.com
 
-
-<p style="display: none;">1</p><span>1</span><span style="display: inline-block;">7</span>
+<p style="display: none;">1</p>
+<span>1</span>
+<span style="display: inline-block;">7</span>
 <div style="display: inline-block;"></div>
-<div style="display: inline-block;"></div><span style="display: inline-block;">5.</span>
-<div style="display: inline-block;">3</div><span style="display: inline-block;">0</span><span style="display: inline-block;">.</span>
+<div style="display: inline-block;"></div>
+<span style="display: inline-block;">5.</span>
+<div style="display: inline-block;">3</div>
+<span style="display: inline-block;">0</span>
+<span style="display: inline-block;">.</span>
 <div style="display: inline-block;">12</div>
-<p style="display: none;">4.</p><span>4.</span>
-<p style="display: none;">12</p><span>12</span>
-<p style="display: none;"></p><span></span><span style="display: inline-block;">8</span>:<span class="port GEA">8615</span>
+<p style="display: none;">4.</p>
+<span>4.</span>
+<p style="display: none;">12</p>
+<span>12</span>
+<p style="display: none;"></p>
+<span></span>
+<span style="display: inline-block;">8</span>
+:
+<span class="port GEA">8615</span>
 
     长这样...
     """
@@ -84,13 +94,24 @@ class GoubanjiaProxySpider(BaseProxySpider):
         for url in self.start_urls:
             content = requests.get(url, headers=self.headers).content
             tree = etree.HTML(content)
-            for sel in tree.xpath('//tr/td[@class="ip"]'):
+            # for sel in tree.xpath('//table/tbody/tr/td[@class="ip"]'):
+            for sel in tree.xpath('//table/tbody/tr'):
                 proxy = Proxy()
-                proxy.port = sel.xpath('span[contains(@class, "port")]/text()')[0]
-                ip_slices = sel.xpath('*[contains(@style, "display: inline-block;") or contains(@style, "") and not(contains(@class, "port"))]/text()')
+                try:
+                    proxy.port = sel.xpath('td[@class="ip"]/span[contains(@class, "port")]/text()')[0]
+                    ip_slices = sel.xpath('td[@class="ip"]/*[not(contains(@style, "display: none;")) and not(contains(@style, "display:none;")) and not(contains(@class, "port"))]/text()')
+                except:
+                    continue
                 ip = ''
                 for sli in ip_slices:
                     ip += sli
+
+                try:
+                    proxy.faceless = sel.xpath('td[2]/a/text()')[0]
+                    proxy.type = sel.xpath('td[3]/a/text()')[0]
+                except:
+                    pass
+
                 proxy.ip = ip
                 yield json.dumps(proxy.to_dict())
 
