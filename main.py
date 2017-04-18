@@ -6,6 +6,7 @@ from spider.ProxySpiderFactory import ProxySpiderFactory
 from spider.ProxyValidator import ProxyValidator
 from spider.ProxyGetter import ProxyGetter
 from db.RedisClient import RedisClient
+from api import ProxyApi
 
 
 def run():
@@ -13,10 +14,13 @@ def run():
     validator = ProxyValidator()
     validator.start()
 
-    getter = ProxyGetter()
-    for x in range(0, 100):
-        print x
-        print json.dumps(getter.get())
+    # 启动 Flask 服务器
+    ProxyApi.app.run()
+
+    # getter = ProxyGetter()
+    # for x in range(0, 100):
+    #     print x
+    #     print json.dumps(getter.get())
 
 
 if __name__ == '__main__':

@@ -44,6 +44,9 @@ class Proxy(object):
             'type': self.type,
         }
 
+    def to_string(self):
+        return json.dumps(self.to_dict())
+
     @classmethod
     def to_object(cls, object_dict):
         if type(object_dict) != dict:

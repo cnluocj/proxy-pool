@@ -5,6 +5,7 @@ import json
 from db.DBClientFactory import DBClientFactory
 from db.RedisClient import RedisClient
 from spider.ProxySpiderFactory import ProxySpiderFactory
+from spider.items import Proxy
 from spider.ProxyValidator import ProxyValidator
 
 
@@ -21,13 +22,9 @@ class ProxyGetter(object):
             self.__crawl_proxy()
 
         proxy_json = self.db_client.blpop()[1]
-        proxy = json.loads(proxy_json)
-        is_active = ProxyValidator.scan(proxy['ip'], proxy['port'])
-        if is_active:
-            self.db_client.put(proxy_json)
-            return proxy
-        else:
-            return self.get()
+        self.db_client.put(proxy_json)
+        proxy = Proxy.to_object(proxy_json)
+        return proxy
 
     def __crawl_proxy(self):
         for cl in ProxySpiderFactory.proxy_clss:
