@@ -2,6 +2,7 @@
 
 import threading
 import socket
+import time
 from db.RedisClient import RedisClient
 from spider.items import Proxy
 from db.DBClientFactory import DBClientFactory
@@ -22,9 +23,10 @@ class ProxyValidator(threading.Thread):
         while True:
             proxy_dict = self.wait_queue.blpop()[1]
             proxy = Proxy.to_object(proxy_dict)
+            proxy.valid_at = time.time()
             is_active = ProxyValidator.scan(proxy.ip, int(proxy.port))
             if is_active:
-                self.pass_queue.put(proxy_dict)
+                self.pass_queue.put(proxy.to_string())
 
     @classmethod
     def scan(cls, ip, port):

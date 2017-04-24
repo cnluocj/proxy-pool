@@ -45,6 +45,7 @@ class Proxy(object):
             'port': self.port,
             'faceless': self.faceless,
             'type': self.type,
+            'valid_at': self.valid_at,
         }
 
     def to_string(self):
@@ -60,6 +61,7 @@ class Proxy(object):
         proxy.port = object_dict['port']
         proxy.faceless = object_dict['faceless']
         proxy.type = object_dict['type']
+        proxy.valid_at = object_dict['valid_at']
         return proxy
 
 if __name__ == '__main__':
