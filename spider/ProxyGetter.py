@@ -16,12 +16,18 @@ class ProxyGetter(object):
         self.wait_db_client = DBClientFactory.create_wait_validate_db_client(db_client_class)
 
     def get(self):
+        """
+        如果能获取代理则返回代理,否则返回 False
+        :return:
+        """
         proxy_count = self.db_client.get_count()
         wait_proxy_count = self.wait_db_client.get_count()
         if proxy_count < 10 and not wait_proxy_count:
             self.__crawl_proxy()
 
-        proxy_json = self.db_client.blpop()[1]
+        proxy_json = self.db_client.lpop()
+        if not proxy_json:
+            return False
         self.db_client.put(proxy_json)
         proxy = Proxy.to_object(proxy_json)
         return proxy
