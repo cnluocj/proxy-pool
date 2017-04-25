@@ -13,6 +13,8 @@
 pip install -r requirements.txt
 ```
 
+还需要安装 redis
+
 
 ##### 运行
 
