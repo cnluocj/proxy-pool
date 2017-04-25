@@ -22,13 +22,15 @@ class ProxyGetter(object):
         """
         proxy_count = self.db_client.get_count()
         wait_proxy_count = self.wait_db_client.get_count()
+        # 如果可用代理数少于10,并且没有等待验证的代理,那么就重新爬取代理
         if proxy_count < 10 and not wait_proxy_count:
             self.__crawl_proxy()
 
         proxy_json = self.db_client.lpop()
         if not proxy_json:
             return False
-        self.db_client.put(proxy_json)
+        # 用过一次之后又回到验证列表
+        self.wait_db_client.put(proxy_json)
         proxy = Proxy.to_object(proxy_json)
         return proxy
 

@@ -2,6 +2,7 @@
 
 
 from spider.ProxyValidator import ProxyValidator
+from spider.ProxyValidator import ProxyReValidator
 from api import ProxyApi
 
 
@@ -10,6 +11,9 @@ def run():
     for i in range(10):
         validator = ProxyValidator()
         validator.start()
+
+    revalidator = ProxyReValidator()
+    revalidator.start()
 
     # 启动 Flask 服务器
     ProxyApi.app.run()
