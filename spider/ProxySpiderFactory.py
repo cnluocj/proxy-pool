@@ -6,8 +6,9 @@ from spider.ProxySpider import *
 class ProxySpiderFactory(object):
 
     proxy_clss = [
-        KuaidailiProxySpider,
+        # KuaidailiProxySpider,
         XicidailiProxySpider,
+        GoubanjiaProxySpider,
     ]
 
     @classmethod

@@ -7,7 +7,19 @@
 的爬取
 
 
-TODO:
+##### 安装依赖
 
-~~1. 使用 Flask 实现代理API~~
-2. 自动再检测已检代理的可用性
+```
+pip install -r requirements.txt
+```
+
+
+##### 运行
+
+```
+python main.py
+```
+
+##### 使用
+
+浏览器访问 `http://127.0.0.1:5000/getproxy`

@@ -2,6 +2,7 @@
 
 
 import json
+import threading
 from db.DBClientFactory import DBClientFactory
 from db.RedisClient import RedisClient
 from spider.ProxySpiderFactory import ProxySpiderFactory
@@ -35,11 +36,21 @@ class ProxyGetter(object):
         return proxy
 
     def __crawl_proxy(self):
+        ProxyCrawler(self.wait_db_client).start()
+
+
+class ProxyCrawler(threading.Thread):
+
+    def __init__(self, db_client):
+        super(ProxyCrawler, self).__init__()
+        self.db_client = db_client
+
+    def run(self):
         for cl in ProxySpiderFactory.proxy_clss:
             spider = ProxySpiderFactory.create_spider(cl)
             proxies = spider.load_proxies()
             for proxy in proxies:
-                self.wait_db_client.put(proxy)
+                self.db_client.put(proxy)
 
 
 if __name__ == '__main__':
