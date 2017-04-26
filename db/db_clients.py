@@ -4,7 +4,7 @@
 import redis
 import json
 from spider.items import Proxy
-from spider.ProxySpiderFactory import ProxySpiderFactory
+from spider.spider_factory import ProxySpiderFactory
 
 
 class RedisClient(object):

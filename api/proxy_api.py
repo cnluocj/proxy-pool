@@ -3,7 +3,7 @@
 
 import json
 from flask import Flask
-from spider.ProxyGetter import ProxyGetter
+from spider.getter import ProxyGetter
 
 app = Flask(__name__)
 

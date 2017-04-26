@@ -3,9 +3,9 @@
 import threading
 import socket
 import time
-from db.RedisClient import RedisClient
+from db.db_clients import RedisClient
 from spider.items import Proxy
-from db.DBClientFactory import DBClientFactory
+from db.db_factory import DBClientFactory
 
 
 class ProxyValidator(threading.Thread):

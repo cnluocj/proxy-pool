@@ -1,10 +1,10 @@
 # coding:utf-8
 
 
-from spider.ProxyValidator import ProxyValidator
-from spider.ProxyValidator import ProxyReValidator
-from spider.ProxyGetter import ProxyGetter
-from api import ProxyApi
+from spider.validator import ProxyValidator
+from spider.validator import ProxyReValidator
+from spider.getter import ProxyGetter
+from api import proxy_api
 
 
 def run():
@@ -20,7 +20,7 @@ def run():
     ProxyGetter().get()
 
     # 启动 Flask 服务器
-    ProxyApi.app.run()
+    proxy_api.app.run()
 
 
 if __name__ == '__main__':

@@ -3,11 +3,10 @@
 
 import json
 import threading
-from db.DBClientFactory import DBClientFactory
-from db.RedisClient import RedisClient
-from spider.ProxySpiderFactory import ProxySpiderFactory
+from db.db_factory import DBClientFactory
+from db.db_clients import RedisClient
+from spider.spider_factory import ProxySpiderFactory
 from spider.items import Proxy
-from spider.ProxyValidator import ProxyValidator
 
 
 class ProxyGetter(object):

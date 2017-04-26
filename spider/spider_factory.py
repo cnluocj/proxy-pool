@@ -1,6 +1,6 @@
 # coding:utf-8
 
-from spider.ProxySpider import *
+from spider.proxy_spider import *
 
 
 class ProxySpiderFactory(object):
