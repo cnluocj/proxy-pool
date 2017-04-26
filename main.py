@@ -4,7 +4,9 @@
 from spider.validator import ProxyValidator
 from spider.validator import ProxyReValidator
 from spider.getter import ProxyGetter
+from db.db_factory import DBClientFactory
 from api import proxy_api
+from db.db_clients import RedisClient
 
 
 def run():
@@ -13,8 +15,15 @@ def run():
         validator = ProxyValidator()
         validator.start()
 
-    revalidator = ProxyReValidator()
-    revalidator.start()
+    # 重复验证
+    http_db_client = DBClientFactory.create_active_db_client(db_client_class=RedisClient, protocol='HTTP')
+    https_db_client = DBClientFactory.create_active_db_client(db_client_class=RedisClient, protocol='HTTPS')
+
+    http_revalidator = ProxyReValidator(pass_queue=http_db_client)
+    http_revalidator.start()
+
+    https_revalidator = ProxyReValidator(pass_queue=https_db_client)
+    https_revalidator.start()
 
     # 触发爬虫
     ProxyGetter().get()

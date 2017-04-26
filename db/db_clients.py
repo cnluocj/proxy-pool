@@ -5,6 +5,7 @@ import redis
 import json
 from spider.items import Proxy
 from spider.spider_factory import ProxySpiderFactory
+from db.db_factory import DBClientFactory
 
 
 class RedisClient(object):
@@ -38,16 +39,17 @@ class RedisClient(object):
 
 
 if __name__ == '__main__':
-    # client = RedisClient(name='wait_validate_proxies', host='localhost', port=6379)
-    # for cls in ProxySpiderFactory.proxy_clss:
-    #     spider = ProxySpiderFactory.create_spider(cls)
-    #     proxies = spider.load_proxies()
-    #     for proxy in proxies:
-    #         client.put(proxy)
-    #         proxy = Proxy.to_object(proxy)
-    #         print 'ip: {}, port: {}, type: {}'.format(proxy.ip, proxy.port, proxy.type)
+    # client = RedisClient(name='http_proxies', host='localhost', port=6379)
+    client = DBClientFactory.create_active_db_client(RedisClient)
+    for cls in ProxySpiderFactory.proxy_clss:
+        spider = ProxySpiderFactory.create_spider(cls)
+        proxies = spider.load_proxies()
+        for proxy in proxies:
+            client.put(proxy)
+            proxy = Proxy.to_object(proxy)
+            print 'ip: {}, port: {}, type: {}'.format(proxy.ip, proxy.port, proxy.type)
 
-    client = RedisClient(name='active_proxies', host='localhost', port=6379)
-    print client.lpop()
+    # client = RedisClient()
+    # print client.lpop()
 
 
